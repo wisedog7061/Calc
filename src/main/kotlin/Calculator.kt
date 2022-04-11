@@ -16,8 +16,23 @@ object Calculator {
                 unaryOperations[operation.name] = operation }
     }
 
-    private fun inputParser(input: String): List<String>{
-        TODO()
+    private fun parseInput(input: String): List<String>{
+        var result: String = input
+
+        for (operation in binaryOperations.keys){
+            result = result.replace(operation, " $operation ")
+        }
+
+        for (operation in unaryOperations.keys){
+            result = result.replace(operation, " $operation ")
+        }
+
+        result = result.replace("(", " ( ")
+        result = result.replace(")", " ) ")
+        result = result.replace("\\s+".toRegex(), " ")
+        result = result.trim()
+
+        return result.split(" ")
     }
 
     fun getAvailableOperations(): HashMap<String, Collection<String>>{
