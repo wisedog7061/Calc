@@ -1,7 +1,4 @@
-import Operations.Binary.AddOperation
-import Operations.Binary.IBinaryOperation
-import Operations.Binary.MultiplyOperation
-import Operations.Binary.SubOperation
+import Operations.Binary.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
@@ -28,6 +25,14 @@ class OperationsTest {
         assertEquals(5.0, operation.calculate(7.0, 2.0))
         assertEquals("-", operation.name)
         assertEquals(1, operation.priority)
+    }
+
+    @Test
+    fun testDiv(){
+        val operation: IBinaryOperation = DivOperation()
+        assertEquals(4.0, operation.calculate(8.0, 2.0))
+        assertEquals("/", operation.name)
+        assertEquals(2, operation.priority)
     }
 }
 
