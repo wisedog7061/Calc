@@ -8,31 +8,26 @@ import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
 object Calculator {
-    private val binaryOperations: HashMap<String, IBinaryOperation> = HashMap()
-    private val unaryOperations: HashMap<String, IUnaryOperation> = HashMap()
+    private val operations: HashMap<String, IOperation> = HashMap()
 
     init {
         Reflections("Operations.Binary").getSubTypesOf(IBinaryOperation::class.java)
             .forEach { x ->
                 val operation: IBinaryOperation = x.getConstructor().newInstance()
-                binaryOperations[operation.name] = operation
+                operations[operation.name] = operation
             }
 
         Reflections("Operations.Unary").getSubTypesOf(IUnaryOperation::class.java)
             .forEach { x ->
                 val operation: IUnaryOperation = x.getConstructor().newInstance()
-                unaryOperations[operation.name] = operation
+                operations[operation.name] = operation
             }
     }
 
     private fun parseInput(input: String): List<String> {
         var result: String = input
 
-        for (operation in binaryOperations.keys) {
-            result = result.replace(operation, " $operation ")
-        }
-
-        for (operation in unaryOperations.keys) {
+        for (operation in operations.keys) {
             result = result.replace(operation, " $operation ")
         }
 
@@ -44,18 +39,12 @@ object Calculator {
         return result.split(" ")
     }
 
-    fun getAvailableOperations(): HashMap<String, Collection<String>> {
-        val res: HashMap<String, Collection<String>> = HashMap()
-
-        res["binary"] = binaryOperations.keys
-        res["unary"] = unaryOperations.keys
-
-        return res
+    fun getAvailableOperations(): Collection<String> {
+        return operations.keys
     }
 
     private fun calculateFromStack(numberStack: Stack<Double>, operationName: String) {
-        val operation: IOperation = binaryOperations[operationName]
-            ?: unaryOperations[operationName]!!
+        val operation: IOperation = operations[operationName]!!
 
         if (operation is IUnaryOperation) {
             numberStack.add(operation.calculate(numberStack.pop()))
@@ -67,20 +56,21 @@ object Calculator {
         }
     }
 
-    fun calculate(input: String): Double {
-        val splittedSymbols: List<String> = parseInput(input)
+    fun calculate(input: String): Double { //reverse Polsk notation
+        val splitSymbols: List<String> = parseInput(input)
 
         val numberStack: Stack<Double> = Stack()
         val operationStack: Stack<String> = Stack()
+
         try {
-            for (symbol in splittedSymbols) {
+            for (symbol in splitSymbols) {
                 if (symbol.toDoubleOrNull() != null) {
                     numberStack.add(symbol.toDouble())
                     continue
                 }
 
                 if (symbol == "(") {
-                    operationStack.add("(")
+                    operationStack.add(symbol)
                     continue
                 }
 
@@ -93,34 +83,30 @@ object Calculator {
                     continue
                 }
 
-                if (symbol in binaryOperations.keys) {
-                    val operation: IBinaryOperation = binaryOperations[symbol]!!
+                if (symbol in operations.keys) {
+                    val thisOperation: IOperation = operations[symbol]!!
 
                     if (operationStack.empty() || operationStack.peek() == "(") {
                         operationStack.add(symbol)
                         continue
                     }
 
-                    var temp = operationStack.peek()
+                    var previousOperation: IOperation = operations[operationStack.peek()]!!
 
-                    val operationFromStack: IOperation = binaryOperations[temp]
-                        ?: unaryOperations[temp]!!
-
-                    if (operation.priority > operationFromStack.priority) {
-                        operationStack.add(operation.name)
+                    if (thisOperation.priority > previousOperation.priority) {
+                        operationStack.add(thisOperation.name)
                         continue
                     } else {
                         while (!operationStack.empty()) {
-                            calculateFromStack(numberStack, temp)
-                            temp = operationStack.pop()
-                            val oper: IOperation = binaryOperations[temp] ?: unaryOperations[temp]!!
+                            calculateFromStack(numberStack, previousOperation.name)
+                            previousOperation = operations[operationStack.pop()]!!
 
-                            if (temp == "(" || oper.priority <= oper.priority) {
+                            if (thisOperation.priority <= previousOperation.priority) {
                                 break
                             }
                         }
 
-                        operationStack.add(operation.name)
+                        operationStack.add(thisOperation.name)
                         continue
                     }
                 }
