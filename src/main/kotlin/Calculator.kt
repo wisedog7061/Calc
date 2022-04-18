@@ -98,10 +98,12 @@ object Calculator {
                         continue
                     } else {
                         while (!operationStack.empty()) {
-                            calculateFromStack(numberStack, previousOperation.name)
                             previousOperation = operations[operationStack.pop()]!!
+                            calculateFromStack(numberStack, previousOperation.name)
 
-                            if (thisOperation.priority <= previousOperation.priority) {
+                            if (operationStack.empty() ||
+                                operationStack.peek() == "(" ||
+                                thisOperation.priority > operations[operationStack.peek()]!!.priority) {
                                 break
                             }
                         }
