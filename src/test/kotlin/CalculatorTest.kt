@@ -72,4 +72,11 @@ class CalculatorTest {
         val exception = assertThrows(IllegalArgumentException::class.java) { calculator.calculate(expression) }
         assertEquals(IllegalArgumentException::class, exception::class)
     }
+
+    @Test
+    fun testCalculateWithUnary(){
+        val expression = "3+(4-3*8/5+sin(15*2))/2"
+
+        assertEquals(2.85, calculator.calculate(expression))
+    }
 }

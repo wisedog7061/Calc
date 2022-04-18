@@ -1,6 +1,9 @@
 import Operations.Binary.*
+import Operations.Unary.IUnaryOperation
+import Operations.Unary.SinOperation
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.math.roundToInt
 
 class OperationsTest {
     @Test
@@ -33,6 +36,14 @@ class OperationsTest {
         assertEquals(4.0, operation.calculate(8.0, 2.0))
         assertEquals("/", operation.name)
         assertEquals(2, operation.priority)
+    }
+
+    @Test
+    fun testSin(){
+        val operation: IUnaryOperation = SinOperation()
+        assertEquals(0.5, (operation.calculate(30.0) * 1000).roundToInt() / 1000.0)
+        assertEquals("sin", operation.name)
+        assertEquals(4, operation.priority)
     }
 }
 
