@@ -25,7 +25,7 @@ object Calculator {
     }
 
     private fun parseInput(input: String): List<String> {
-        var result: String = input
+        var result: String = input.lowercase(Locale.getDefault())
 
         for (operation in operations.keys) {
             result = result.replace(operation, " $operation ")
@@ -115,8 +115,7 @@ object Calculator {
             }
 
             while (!operationStack.empty()) {
-                calculateFromStack(numberStack, operationStack.peek())
-                operationStack.pop()
+                calculateFromStack(numberStack, operationStack.pop())
             }
         } catch (e: Exception){
             throw IllegalArgumentException()
