@@ -8,21 +8,6 @@ import kotlin.math.roundToInt
 class Calculator {
     private val operations = OperationsList.operations
 
-    private fun parseInput(input: String): List<String> {
-        var result: String = input.lowercase(Locale.getDefault())
-
-        for (operation in operations.keys) {
-            result = result.replace(operation, " $operation ")
-        }
-
-        result = result.replace("(", " ( ")
-        result = result.replace(")", " ) ")
-        result = result.replace("\\s+".toRegex(), " ")
-        result = result.trim()
-
-        return result.split(" ")
-    }
-
     private fun calculateFromStack(numberStack: Stack<Double>, operationName: String) {
         val operation: IOperation = operations[operationName]!!
 
@@ -36,14 +21,14 @@ class Calculator {
         }
     }
 
-    fun calculate(input: String): Double { //reverse Polsk notation
-        val splitSymbols: List<String> = parseInput(input)
+    fun calculate(expresion: String): Double { //reverse Polsk notation
+        val symbols: List<String> = Expression(expresion).symbols
 
         val numberStack: Stack<Double> = Stack()
         val operationStack: Stack<String> = Stack()
 
         try {
-            for (symbol in splitSymbols) {
+            for (symbol in symbols) {
                 if (symbol.toDoubleOrNull() != null) {
                     numberStack.add(symbol.toDouble())
                     continue
