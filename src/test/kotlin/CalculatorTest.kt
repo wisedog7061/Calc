@@ -1,5 +1,3 @@
-//@file:Suppress("UNCHECKED_CAST")
-
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -36,7 +34,14 @@ class CalculatorTest {
     }
 
     @Test
-    fun testCalculateWithUnary(){
+    fun testCalculateWithUnaryMinus(){
+        val expression = "-2+-3*(-2-2)-1"
+
+        assertEquals(9.0, calculator.calculate(expression))
+    }
+
+    @Test
+    fun testCalculateWithUnaryOperation(){
         val expression = "3+(4-3*8/5+sin(15*2))/2"
 
         assertEquals(2.85, calculator.calculate(expression))
