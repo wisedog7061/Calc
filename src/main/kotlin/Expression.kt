@@ -19,18 +19,18 @@ class Expression(input: String) {
         tmp = tmp.replace("\\s+".toRegex(), " ")
         tmp = tmp.trim()
 
-        val splinted = tmp.split(" ")
+        val symbols = tmp.split(" ")
         val result = ArrayList<String>()
 
         var i = 0
-        while (i < splinted.size){
-            val symbol = splinted[i]
+        while (i < symbols.size){
+            val symbol = symbols[i]
 
             if(symbol == "-" &&
                 (i == 0 ||
-                        splinted[i-1].toDoubleOrNull() == null &&
-                        splinted[i-1] != ")")){
-                result.add("${symbol}${splinted[i+1]}")
+                        symbols[i-1].toDoubleOrNull() == null &&
+                        symbols[i-1] != ")")){
+                result.add("${symbol}${symbols[i+1]}")
                 i += 2
 
                 continue
