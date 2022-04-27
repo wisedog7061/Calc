@@ -5,15 +5,7 @@ import org.junit.jupiter.api.Test
 import java.lang.reflect.Method
 
 class CalculatorTest {
-    private val calculator: Calculator = Calculator
-
-    @Test
-    fun testOperationCollector(){
-        val e = calculator.getAvailableOperations()
-
-        assert(e.contains("+"))
-        assert(e.contains("*"))
-    }
+    private val calculator: Calculator = Calculator()
 
     private fun getInputParserMethod(): Method{
         val method: Method = Calculator::class.java.getDeclaredMethod("parseInput", String::class.java)

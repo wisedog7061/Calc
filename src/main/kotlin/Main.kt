@@ -1,8 +1,9 @@
 fun main(args: Array<String>){
-    val calculator = Calculator
+    val operations = OperationsList
+    val calculator = Calculator()
 
     if (args.contains("-a")){
-        println(" All Operations: ${calculator.getAvailableOperations()} ")
+        println(" All Operations: ${operations.getAvailableOperations()} ")
         return
     }
 

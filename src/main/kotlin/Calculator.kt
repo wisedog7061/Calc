@@ -1,28 +1,12 @@
 import Operations.Binary.IBinaryOperation
 import Operations.IOperation
 import Operations.Unary.IUnaryOperation
-import org.reflections.Reflections
 import java.lang.IllegalArgumentException
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
-object Calculator {
-    private val operations: HashMap<String, IOperation> = HashMap()
-
-    init {
-        Reflections("Operations.Binary").getSubTypesOf(IBinaryOperation::class.java)
-            .forEach { x ->
-                val operation: IBinaryOperation = x.getConstructor().newInstance()
-                operations[operation.name] = operation
-            }
-
-        Reflections("Operations.Unary").getSubTypesOf(IUnaryOperation::class.java)
-            .forEach { x ->
-                val operation: IUnaryOperation = x.getConstructor().newInstance()
-                operations[operation.name] = operation
-            }
-    }
+class Calculator {
+    private val operations = OperationsList.operations
 
     private fun parseInput(input: String): List<String> {
         var result: String = input.lowercase(Locale.getDefault())
@@ -37,10 +21,6 @@ object Calculator {
         result = result.trim()
 
         return result.split(" ")
-    }
-
-    fun getAvailableOperations(): Collection<String> {
-        return operations.keys
     }
 
     private fun calculateFromStack(numberStack: Stack<Double>, operationName: String) {
